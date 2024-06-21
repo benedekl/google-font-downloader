@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+set -u
+
+TMPNAME="/tmp/.download.tmp.css"
+FONTDEF="./fontdef.txt"
+
+while read HBS URL; do
+  curl "${URL}" -H 'User-Agent: Mozilla/5.0 Firefox/90.0' -o "${TMPNAME}"
+  sh ./transform-css.sh "${TMPNAME}" > "partials/typography/${HBS}"
+  mv ./download-fonts.sh "assets/fonts/.download-${HBS}.sh"
+done < "${FONTDEF}"
+
+rm "${TMPNAME}"
